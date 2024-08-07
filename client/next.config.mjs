@@ -5,7 +5,7 @@ const nextConfig = {
       return [
         {
           source: '/api/:slug*',
-          destination: 'http://localhost:3001/api/:slug*',
+          destination: 'https://test-deploy-r1ij.onrender.com/api/:slug*',
         },
       ]
     },
