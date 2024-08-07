@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
 
         const token = localStorage.getItem('token');
 
-        const { data, error } = (token) ? useSWR(`http://localhost:3001/api/${url}`, fetcher) : { data: null, error: "No token presented..." };
+        const { data, error } = (token) ? useSWR(`/api/${url}`, fetcher) : { data: null, error: "No token presented..." };
         return { data, error };
     
     }, []);
@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
         try {
 
-            const response = await axios.post('http://localhost:3001/api/users/login', { username, password });
+            const response = await axios.post('/api/users/login', { username, password });
             const token = response.data.token;
 
             localStorage.setItem('token', token);
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
         const token = localStorage.getItem('token');
 
-        axios.get('http://localhost:3001/api/users/pokemon', { headers: { Authorization: `Bearer ${token}` } })
+        axios.get('/api/users/pokemon', { headers: { Authorization: `Bearer ${token}` } })
             .then(async response => setUserPokemon(response.data))
             .catch(error => { console.error('Token invalid'); logout(); });
 
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
         
         if (token) {
 
-            axios.get('http://localhost:3001/api/users/verify', { headers: { Authorization: `Bearer ${token}` } })
+            axios.get('/api/users/verify', { headers: { Authorization: `Bearer ${token}` } })
                 .then(async response => setUser(response.data.username))
                 .catch(error => { console.error('Token invalid'); logout(); });
 

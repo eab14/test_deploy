@@ -3,5 +3,11 @@
         "username" : "admin",
         "password" : "root",
         "admin" : true
+    },
+
+    {
+        "username" : "test",
+        "password" : "test",
+        "admin" : false
     }
 ]

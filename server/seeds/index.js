@@ -10,38 +10,51 @@ const SALT_FACTOR = 10;
 
 let users, starters, wild_pokemon, legendaries;
 
-const initialize = () => new Promise((resolve, reject) => { 
+const initialize = () => new Promise((resolve, reject) => {
+    // Define an array of promises for reading files
+    const promises = [
+        new Promise((res, rej) => {
+            fs.readFile('./data/users.json', 'utf-8', (err, data) => {
+                if (err) rej("Failed to read users.json file...");
+                else {
+                    users = JSON.parse(data);
+                    res();
+                }
+            });
+        }),
+        new Promise((res, rej) => {
+            fs.readFile('./data/starters.json', 'utf-8', (err, data) => {
+                if (err) rej("Failed to read starters.json file...");
+                else {
+                    starters = JSON.parse(data);
+                    res();
+                }
+            });
+        }),
+        new Promise((res, rej) => {
+            fs.readFile('./data/wild.json', 'utf-8', (err, data) => {
+                if (err) rej("Failed to read wild.json file...");
+                else {
+                    wild_pokemon = JSON.parse(data);
+                    res();
+                }
+            });
+        }),
+        new Promise((res, rej) => {
+            fs.readFile('./data/legendaries.json', 'utf-8', (err, data) => {
+                if (err) rej("Failed to read legendaries.json file...");
+                else {
+                    legendaries = JSON.parse(data);
+                    res();
+                }
+            });
+        })
+    ];
 
-    fs.readFile('./data/users.json', 'utf-8', (err, data) => {
-
-        if (!err) users = JSON.parse(data);
-        else { reject("Failed to read users.json file..."); return };
-
-    });
-
-    fs.readFile('./data/starters.json', 'utf-8', (err, data) => {
-
-        if (!err) starters = JSON.parse(data);
-        else { reject("Failed to read starters.json file..."); return };
-
-    });
-
-    fs.readFile('./data/wild.json', 'utf-8', (err, data) => {
-
-        if (!err) wild_pokemon = JSON.parse(data);
-        else { reject("Failed to read wild.json file..."); return };
-
-    });
-
-    fs.readFile('./data/legendaries.json', 'utf-8', (err, data) => {
-
-        if (!err) legendaries = JSON.parse(data);
-        else { reject("Failed to read wild.json file..."); return };
-
-    });
-
-    resolve();
-
+    // Wait for all file reads to complete
+    Promise.all(promises)
+        .then(resolve)
+        .catch(reject);
 });
 
 const seedUsers = async () => {
@@ -235,10 +248,16 @@ const seedTestData = async () => {
 }
 
 connect()
-    .then(() => initialize())
-    .then(() => seedUsers())
+    .then( async () => { 
+        await initialize();
+        await seedUsers();
+        await seedMoves();
+        await seedPokemon();
+        await seedTestData();
+    })
+    // .then(() => seedUsers())
     // .then(() => seedMoves())
-    .then(() => seedPokemon())
-    .then(() => seedTestData())
+    // .then(() => seedPokemon())
+    // .then(() => seedTestData())
     .then(() => mongoose.connection.close())
     .catch(err => console.log(err))

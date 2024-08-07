@@ -9,7 +9,7 @@ let JwtStrategy = passportJWT.Strategy;
 
 let jwtOptions = {
     jwtFromRequest : ExtractJwt.fromAuthHeaderWithScheme('jwt'),
-    secretOrKey : process.env.PASSPORT_SECRET
+    secretOrKey : '12345'
 }
 
 let strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
